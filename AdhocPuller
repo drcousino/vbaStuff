@@ -28,11 +28,7 @@ On Error Resume Next
 Kill (Environ("UserProfile") & "\Desktop\DIFMsnap.xls")
 On Error Resume Next
 Kill (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
-'
-' Macro3 Macro
-'
 
-'
 
     Dim MainWin As String
     Dim WinTitleN As String
@@ -69,9 +65,6 @@ Kill (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
     Dim GenSQLPathArray(4, 1) As String
     
     
-    
-    VerifyNALCOMIS
-    
         WinTitleQI = "Query Impact"
         WinTitleQR = "Query Retrieval"
         WinTitleCR = "Cancel Retrieve"
@@ -89,8 +82,6 @@ Kill (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
         DAILYSOURCESQLName = (Environ("UserProfile") & "\Desktop\DIFM Tracker\DAILYSOURCE.sql")
         DAILYSOURCEPath = (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
         
-'        GenSQLPathArray = Split("DIFMcurSQLName,DIFMhistSQLName,DIFMsnapSQLName,DAILYSOURCESQLName", ",")
-'        GenSavePathArray = Split("DIFMcurSavePath,DIFMhistSavePath,DIFMsnapSavePath,DAILYSOURCEPath", ",")
         
         GenSQLPathArray(0, 0) = DIFMcurSQLName
         GenSQLPathArray(0, 1) = DIFMcurSavePath
@@ -106,13 +97,8 @@ Kill (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
 
         
         
-        
-        
         For NameIndex = 0 To UBound(GenSQLPathArray) Step 1
-        
-            
-            
-      MsgBox GenSQLPathArray(NameIndex, 0) & " - " & GenSQLPathArray(NameIndex, 1)
+    
       
         Do
             NWnd = FindWindow(vbNullString, WinTitleN)
@@ -197,11 +183,6 @@ Kill (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
             
 Line1:
         Loop Until cWnd = 0
-
-LineRQ:
-
-
-
 
 
     Dim WinTitleREQ As String   'ret
