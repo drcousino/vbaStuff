@@ -1,0 +1,330 @@
+Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
+Private Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hWnd As Long, ByVal nCmdShow As Long) As Long
+Private Declare PtrSafe Function SetForegroundWindow Lib "user32" (ByVal hWnd As Long) As Long
+Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+Public Declare PtrSafe Function FindWindowA Lib "user32.dll" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
+
+
+Const SW_SHOWNORMAL = 1
+Const WM_CLOSE = &H10
+
+Sub SmartKeys(delay As Long, keys As String)
+
+    Sleep delay
+        DoEvents
+    SendKeys keys
+        DoEvents
+        Debug.Print keys
+        DoEvents
+
+End Sub
+
+Sub BigOldAdhoc()
+On Error Resume Next
+Kill (Environ("UserProfile") & "\Desktop\DIFMcurr.xls")
+On Error Resume Next
+Kill (Environ("UserProfile") & "\Desktop\DIFMhist.xls")
+On Error Resume Next
+Kill (Environ("UserProfile") & "\Desktop\DIFMsnap.xls")
+On Error Resume Next
+Kill (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
+'
+' Macro3 Macro
+'
+
+'
+
+    Dim MainWin As String
+    Dim WinTitleN As String
+    Dim WinTitle As String
+    Dim qcTitle As String
+    Dim QWnd As Long
+    Dim MWnd As Long
+    Dim NWnd As Long
+    Dim WinWnd As Long
+    Dim ADHOCPath As String
+    Dim AHName As String
+    Dim cWnd As Long
+    Dim qrWnd As Long
+    Dim QIWnd As Long          'winWnd
+    Dim DCWnd As Long          'Database count window
+    Dim WinTitleQI As String   'Ret2
+    Dim WinTitleCR As String   'Ret3
+    Dim WinTitleDC As String
+    Dim WinTitleQR As String
+    Dim pWnd As Long           'Procedual Error window
+    Dim MyCode
+    Dim WinTitleS As String
+    Dim SWnd As Long
+    Dim i As Integer
+    Dim A_Files As String
+    Dim DIFMhistSavePath As String
+    Dim DIFMsnapSavePath As String
+    Dim DIFMcurSavePath As String
+    Dim DAILYSOURCEPath As String
+    Dim DIFMcurSQLName As String
+    Dim DIFMhistSQLName As String
+    Dim DIFMsnapSQLName As String
+    Dim DAILYSOURCESQLName As String
+    Dim GenSQLPathArray(4, 1) As String
+    
+    
+    
+    VerifyNALCOMIS
+    
+        WinTitleQI = "Query Impact"
+        WinTitleQR = "Query Retrieval"
+        WinTitleCR = "Cancel Retrieve"
+        WinTitleDC = "Database Count"
+        WinTitleN = "NALCOMIS IMA - [Unclassified]"
+        WinTitle = "NALCOMIS IMA - [Reports]"
+        ADHOCPath = (Environ("UserProfile") & "\Desktop\DIFM Tracker\DIFMdummy.ah")
+        AHName = "DIFMdummy"
+        DIFMcurSQLName = (Environ("UserProfile") & "\Desktop\DIFM Tracker\DIFMcurr.sql")
+        DIFMcurSavePath = (Environ("UserProfile") & "\Desktop\DIFMcurr.xls")
+        DIFMhistSQLName = (Environ("UserProfile") & "\Desktop\DIFM Tracker\DIFMhist.sql")
+        DIFMhistSavePath = (Environ("UserProfile") & "\Desktop\DIFMhist.xls")
+        DIFMsnapSQLName = (Environ("UserProfile") & "\Desktop\DIFM Tracker\DIFMsnap.sql")
+        DIFMsnapSavePath = (Environ("UserProfile") & "\Desktop\DIFMsnap.xls")
+        DAILYSOURCESQLName = (Environ("UserProfile") & "\Desktop\DIFM Tracker\DAILYSOURCE.sql")
+        DAILYSOURCEPath = (Environ("UserProfile") & "\Desktop\DAILYSOURCE.xls")
+        
+'        GenSQLPathArray = Split("DIFMcurSQLName,DIFMhistSQLName,DIFMsnapSQLName,DAILYSOURCESQLName", ",")
+'        GenSavePathArray = Split("DIFMcurSavePath,DIFMhistSavePath,DIFMsnapSavePath,DAILYSOURCEPath", ",")
+        
+        GenSQLPathArray(0, 0) = DIFMcurSQLName
+        GenSQLPathArray(0, 1) = DIFMcurSavePath
+
+        GenSQLPathArray(1, 0) = DIFMhistSQLName
+        GenSQLPathArray(1, 1) = DIFMhistSavePath
+
+        GenSQLPathArray(2, 0) = DIFMsnapSQLName
+        GenSQLPathArray(2, 1) = DIFMsnapSavePath
+
+        GenSQLPathArray(3, 0) = DAILYSOURCESQLName
+        GenSQLPathArray(3, 1) = DAILYSOURCEPath
+
+        
+        
+        
+        
+        For NameIndex = 0 To UBound(GenSQLPathArray) Step 1
+        
+            
+            
+      MsgBox GenSQLPathArray(NameIndex, 0) & " - " & GenSQLPathArray(NameIndex, 1)
+      
+        Do
+            NWnd = FindWindow(vbNullString, WinTitleN)
+            SetForegroundWindow NWnd
+            SmartKeys 1500, "%NR"
+            MWnd = FindWindow(vbNullString, WinTitle)
+
+        Loop Until MWnd <> 0
+
+            'Show the window
+            ShowWindow MWnd, SW_SHOWNORMAL
+
+            'set window to the run/execute query window
+            SetForegroundWindow MWnd
+            SmartKeys 1500, "%DE%OK%FO"
+
+        'SendKeys ADHOCPath, True
+        SmartKeys 1500, "" & ADHOCPath & ""
+
+        'SendKeys "{Enter}", True
+        SmartKeys 1500, "{Enter}"
+
+        'Set main adhoc window name
+        MainWin = "Nalcomis IMA Ad hoc Query (Expert Mode - " & AHName & ".ah)"
+
+        'Loop until the main adhoc window is open
+        Do
+            WinWnd = FindWindow(vbNullString, MainWin)
+        Loop Until WinWnd <> 0
+
+        'Show the main adhoc window
+        ShowWindow WinWnd, SW_SHOWNORMAL
+
+        'Set the main adhoc window as the foreground window
+        SetForegroundWindow WinWnd
+
+        '*********sql added here
+        SmartKeys 1500, "%OE"
+            SmartKeys 1500, "%R"
+            SmartKeys 1500, "" & GenSQLPathArray(NameIndex, 0) & ""
+            SmartKeys 1500, "{Enter}%K"
+        'Run and execute report, which this will open the query impact window
+        SmartKeys 1500, "%OR"
+
+        'Search the Query Impact window
+        Do '2010
+            QIWnd = FindWindow(vbNullString, WinTitleQI)
+        Loop Until QIWnd <> 0
+        'DCWnd = FindWindow(vbNullString, WinTitleDC)
+
+        'if there is no query impact window then exit program
+        If QIWnd = 0 Then
+            MsgBox "(1) Couldn't find the window ..."
+
+        ElseIf DCWnd = 0 Then
+            SmartKeys 1500, "%G"
+            SmartKeys 1500, "{Enter}"
+
+        End If
+
+        'Show the query impact window
+        ShowWindow QIWnd, SW_SHOWNORMAL
+
+        'Set the foregroudwindow to query impact window
+        SetForegroundWindow QIWnd
+
+        'Hit the enter key to run the adhoc
+        SmartKeys 1500, "{Enter}"
+
+        'Loop until the Cancel Retrieve window is closed
+        Do
+            cWnd = FindWindow(vbNullString, WinTitleCR)
+            If cWnd = 0 Then
+                GoTo Line1
+            End If
+            qrWnd = FindWindow(vbNullString, WinTitleQR)
+            If qrWnd <> 0 Then
+                SmartKeys 1500, "{Enter}"
+                GoTo LineNorecords
+            End If
+
+            
+Line1:
+        Loop Until cWnd = 0
+
+LineRQ:
+
+
+
+
+
+    Dim WinTitleREQ As String   'ret
+    Dim REQWnd As Long  'winwnd4
+
+
+        'Set Window Name
+        WinTitleREQ = "Run/Execute Query"
+
+        'Search the run/execute query window
+        REQWnd = FindWindow(vbNullString, WinTitleREQ)
+
+        'Show the window
+        ShowWindow REQWnd, SW_SHOWNORMAL
+
+        'set window to the run/execute query window
+        SetForegroundWindow REQWnd
+
+        'save csv file
+        SmartKeys 1500, "%S"
+
+'Set Window Name
+            WinTitleS = "Save As"
+
+            'Set Window Name
+            WinTitleQI = "Query Impact"
+
+            'Search the run/execute query window
+            Do
+                SWnd = FindWindow(vbNullString, WinTitleS)
+                'If SWnd = 0 Then
+                '    QWnd = FindWindow(vbNullString, WinTitleQI)
+                '    If QWnd <> 0 Then
+                '        GoTo LineNorecords
+                '    End If
+               ' End If
+             Loop Until SWnd <> 0
+
+            'Show the window
+            ShowWindow SWnd, SW_SHOWNORMAL
+
+            'set window to the run/execute query window
+            SetForegroundWindow SWnd
+
+
+                SmartKeys 1500, "" & GenSQLPathArray(NameIndex, 1) & ""
+                SmartKeys 1500, "%S"
+                SmartKeys 1500, "%Y"
+
+            PauseTime = 1     ' Set duration.
+                Start = Timer    ' Set start time.
+                Do While Timer < Start + PauseTime
+                   DoEvents    ' Yield to other processes.
+                Loop
+
+            'Set Window Name
+            WinTitleS = "Run/Execute Query"
+
+            'Search the run/execute query window
+            Do
+                SWnd = FindWindow(vbNullString, WinTitleS)
+            Loop Until SWnd <> 0
+
+            'Show the window
+            ShowWindow SWnd, SW_SHOWNORMAL
+
+            'set window to the run/execute query window
+            SetForegroundWindow SWnd
+
+            PauseTime = 1    ' Set duration.
+                Start = Timer    ' Set start time.
+                Do While Timer < Start + PauseTime
+                   DoEvents    ' Yield to other processes.
+                Loop
+
+
+            SmartKeys 1500, "{ESC}"
+            
+LineNorecords:
+
+            'Set Window Name
+            WinTitleS = "Query Impact"
+
+            'Search the run/execute query window
+            Do
+                SWnd = FindWindow(vbNullString, WinTitleS)
+            Loop Until SWnd <> 0
+            'Show the window
+            ShowWindow SWnd, SW_SHOWNORMAL
+
+            'set window to the run/execute query window
+            SetForegroundWindow SWnd
+
+            'SendKeys "{ESC}", True
+            SmartKeys 1500, "{ESC}"
+
+            SmartKeys 1500, "%fcn%FXyn"
+Next
+
+Call GetWbs
+
+End Sub
+
+
+Sub chekwrkbk()
+On Error GoTo err_handle
+AppActivate "DIFM TRACKER"
+Call checknal
+Exit Sub
+
+err_handle:
+Call Shell("control.exe /name Microsoft.FolderOptions")
+MsgBox "Click the ""View Tab"", then if the ""Hide extensions for known file types"" is not checked...check it, then click Apply then close the program and reopen", vbExclamation, "CHECK IT YO"
+End Sub
+Sub checknal()
+On Error GoTo err_handle
+AppActivate "NALCOMIS IMA - [Unclassified]"
+Call BigOldAdhoc
+Exit Sub
+
+err_handle:
+
+MsgBox "Unable to locate NALCOMIS IMA - [Unclassified]." & _
+                    Chr(10) & "Please open NALCOMIS to this screen now and " & _
+                    "try again.", vbSystemModal, "SSgt Cousino Says - NALCOMIS Not Active"
+End Sub
